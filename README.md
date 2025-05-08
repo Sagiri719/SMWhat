@@ -1,5 +1,5 @@
-SMWhat?
-Discord rich presence feature for Windows.
+# SMWhat?
+SMW romhack discord rich presence feature for Windows.
 Currently supports the following emulators:
 - Snes9X
 - BizHawk
