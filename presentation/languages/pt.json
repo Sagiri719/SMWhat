@@ -1,0 +1,19 @@
+{
+    "hack_name": "Nenhuma hack detectada",
+    "hack_author": "Nenhum autor(a) detectado(a)",
+    "hack_image": "Nenhuma imagem detectada",
+    "discord": "Discord Rich Presence",
+    "start": "Iniciar",
+    "stop": "Parar",
+    "emulator": "Emulador",
+    "find_hack_label": "Procurar Hack!",
+    "find_hack_button": "Procurar Hack",
+    "rp_error": "Erro ao iniciar o Discord Rich Presence!",
+    "rp_error_closing": "Erro ao fechar o Discord Rich Presence!",
+    "rp_success": "Discord Rich Presence está ativo!",
+    "rp_already_active": "Discord Rich Presence já está ativo!",
+    "rp_not_active": "Discord Rich Presence não está ativo!",
+    "hack_not_found": "Hack não encontrado na base de dados do SMWC!",
+    "monitoring_error": "Erro ao monitorar o processo!",
+    "ok": "OK"
+}

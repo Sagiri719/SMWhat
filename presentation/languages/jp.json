@@ -1,0 +1,19 @@
+{
+    "hack_name": "ハックが検出されません",
+    "hack_author": "作成者が検出されません",
+    "hack_image": "画像が検出されません",
+    "discord": "Discord Rich Presence",
+    "start": "開始",
+    "stop": "停止",
+    "emulator": "エミュレーター",
+    "find_hack_label": "ハックを見つける！",
+    "find_hack_button": "ハックを見つける",
+    "rp_error": "Discordリッチプレゼンスの開始中にエラーが発生しました！",
+    "rp_error_closing": "Discordリッチプレゼンスの終了中にエラーが発生しました！",
+    "rp_success": "Discordリッチプレゼンスは現在アクティブです！",
+    "rp_already_active": "Discordリッチプレゼンスはすでにアクティブです！",
+    "rp_not_active": "Discordリッチプレゼンスはアクティブではありません！",
+    "hack_not_found": "SMWCデータベースにハックが見つかりません！",
+    "monitoring_error": "プロセスの監視中にエラーが発生しました！",
+    "ok": "OK"
+}
