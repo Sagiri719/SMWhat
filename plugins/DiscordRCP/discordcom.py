@@ -1,6 +1,6 @@
 import logging
 
-from presentation.hack_content import HackContent
+from core.hack_content import HackContent
 
 import time
 from pypresence import Presence

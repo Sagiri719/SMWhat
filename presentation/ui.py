@@ -4,25 +4,48 @@ This module contains the UI components for the presentation layer of the applica
 author: @Sagiri721
 """
 
-class UI:
+from abc import ABC, abstractmethod
+
+from controller.hack_controller import HackController;
+
+class UI(ABC):
 
     def __init__(self):
-        pass
 
+        from core.plugins.plugin_loader import load_plugins;
+        self.plugins = load_plugins(self);
+
+        self.plugin_event_all("start");
+
+        self.controller: HackController = HackController();
+
+    @abstractmethod
     def display_message(self, message: str):
         print(message)
 
+    @abstractmethod
     def find_hack(self):
         self.display_message("Finding hack...")
 
+    @abstractmethod
     def find_hack_manual(self):
         self.display_message("Finding hack manually...")
 
-    def set_presence(self):
-        self.display_message("Setting presence...")
-
-    def destroy_presence(self):
-        self.display_message("Destroying presence...")
-
+    @abstractmethod
     def run(self):
         print("Running the UI...")
+
+    def get_plugins(self):
+        return self.plugins;
+
+    def plugin_event(self, plugin, event: str, *args):
+        if hasattr(plugin, event):
+            getattr(plugin, event)(*args);
+
+    def plugin_event_all(self, event: str, *args):
+        """
+        Call the plugin event with the given name and arguments for all plugins.
+        """
+        for plugin in self.plugins:
+            if hasattr(plugin, event):
+                getattr(plugin, event)(*args);

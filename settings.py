@@ -4,23 +4,13 @@ import logging;
 import datetime;
 
 from core.emulator import snes9x, emulator_list, Emulator, get_emulator_by_name;
-from presentation.gui import GuiApp;
 from presentation.translations import import_translation;
 from persistence.persistence import init_persistence;
 
+from core.constants import *
 from utils import resource_path;
 
 logger = logging.getLogger(__name__);
-
-LOGGING_LEVEL = logging.DEBUG;
-LOG_FILE = "logs/smwhat.log";
-
-SETTINGS_FILE = "settings.json";
-
-VERSION = "0.1.0";
-LICESE_FILE = "LICENSE";
-
-ui_modes = [GuiApp];
 
 app_config = {
     "emulator": snes9x,
@@ -85,7 +75,7 @@ def load_settings_from_file():
             app_config["emulator"] = snes9x;
 
         # Check if the UI mode is valid
-        if app_config["ui"] >= len(ui_modes):
+        if app_config["ui"] >= len(UI_MODES):
             logger.error("Nonsupported UI mode in settings.json! Defaulting to GUI.");
             app_config["ui"] = 0;
 

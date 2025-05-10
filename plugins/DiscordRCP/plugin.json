@@ -1,0 +1,6 @@
+{
+    "name": "Discord Rich Presence",
+    "description": "Updates Discord status based on current ROM hack",
+    "version": "1.0.0",
+    "entry_point": "DiscordRCPPlugin"
+  }

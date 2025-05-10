@@ -9,12 +9,8 @@ from core.end_points import Endpoints;
 
 logger = logging.getLogger(__name__);
 
-BASE_URL = "https://www.smwcentral.net/ajax.php"  # Base URL for the SMWC API
-TIMEOUT = 10  # Timeout for requests
-
-HACK_SECTION = "smwhacks";
-
 def query_by_hack_name(name: str) -> list:
+    from core.constants import BASE_URL, TIMEOUT, HACK_SECTION;
 
     params = {
         "a": Endpoints.SECTION_LIST.value,

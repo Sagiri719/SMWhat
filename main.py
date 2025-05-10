@@ -6,7 +6,8 @@ import sys
 import os
 
 from presentation.ui import UI;
-from settings import init_settings, app_config, ui_modes;
+from settings import init_settings, app_config;
+from core.constants import UI_MODES;
 
 # Initialize settings
 init_settings();
@@ -14,7 +15,7 @@ init_settings();
 if __name__ == "__main__":
 
     # Start UI
-    app: UI = ui_modes[app_config["ui"]]();
+    app: UI = UI_MODES[app_config["ui"]]();
     app.run();
 
     # window_name: str = get_emulator_window(snes9x);

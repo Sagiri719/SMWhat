@@ -6,10 +6,10 @@ from utils import resource_path;
 
 logger = logging.getLogger(__name__);
 
-FALLBACK_LANG = 'en';
-
 def import_translation(lang: str) -> dict:
     """Import the translation file for the given language."""
+    
+    from core.constants import FALLBACK_LANG;
     
     fallback_translation: dict = {};
     with open(resource_path(f'presentation/languages/{FALLBACK_LANG}.json'), 'r', encoding='utf-8') as f:

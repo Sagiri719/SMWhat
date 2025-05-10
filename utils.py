@@ -57,9 +57,6 @@ def get_app_version() -> str:
     import settings;
     return f'SMWhat v{settings.VERSION} by Sagiri';
 
-def get_app_version_message() -> str:
-    return get_app_version() + "\n" + get_app_license();
-
 def get_source_code() -> str:
     return "https://github.com/Sagiri721/SMWhat";
 

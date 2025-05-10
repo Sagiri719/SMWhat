@@ -1,6 +1,5 @@
 beautifulsoup4==4.13.4
 Pillow==11.2.1
 psutil==5.9.8
-pypresence==4.3.0
 pywin32==306
 Requests==2.32.3

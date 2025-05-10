@@ -65,7 +65,7 @@ def get_hack_by_name(hack_name: str):
             closest_match = dist;
             closest_hack = hack;
 
-    from presentation.hack_content import map_hack_content;
+    from core.hack_content import map_hack_content;
     return map_hack_content(closest_hack);
 
 def search_for_hack(name) -> list:
@@ -78,7 +78,7 @@ def search_for_hack(name) -> list:
         return None;
 
     # Map results to HackContent
-    from presentation.hack_content import map_hack_content;
+    from core.hack_content import map_hack_content;
     results = [map_hack_content(hack) for hack in results];
 
     return results;
