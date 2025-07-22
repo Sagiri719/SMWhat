@@ -8,6 +8,8 @@ LOG_FILE = "logs/smwhat.log";
 PLUGIN_FOLDER = "plugins"; # Folder where plugins are stored
 LICESE_FILE = "LICENSE";
 SETTINGS_FILE = "settings.json";
+DATAMAP_FILE = "persistence\data.json";
+PLUGIN_CACHE_FILE = "persistence\plugin_data.json"; # File to store plugin cache
 
 UI_MODES = [GuiApp]; # List of UI modes available
 FALLBACK_LANG = 'en'; # Default language to use when translation is not found
@@ -16,6 +18,10 @@ BASE_URL = "https://www.smwcentral.net/ajax.php"  # Base URL for the SMWC API
 HACK_SECTION = "smwhacks"; # Name of the section to query for hacks
 
 TIMEOUT = 10  # Timeout for requests
+
+SUPPORTED_LANGUAGES = ["en", "pt", "jp"];
+
+ACTIVE_MONITOR_SLEEP_DELAY = 1; # The amount of time to wait before checking for active monitor again
 
 VERSION = "1.0.1";
 CHANGELOG = [

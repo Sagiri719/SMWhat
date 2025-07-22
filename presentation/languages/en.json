@@ -29,5 +29,6 @@
     "emulator_not_found": "Emulator not found!",
     "clear_logs": "Clear logs",
     "plugins": "Plugins",
-    "instructions": "User manual"
+    "instructions": "User manual",
+    "logs_cleared": "Logs have been cleared"
 }

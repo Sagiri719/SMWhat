@@ -10,8 +10,6 @@ import re;
 import json;
 
 import core.api as SMWC;
-
-from persistence.persistence import get_hack_alias;
 import utils;
 
 SMW_IMAGE_BASE = "https://dl.smwcentral.net/image";
@@ -31,6 +29,8 @@ def sanitize_rom_name(rom_name: str) -> str:
 
 def get_hack_by_name(hack_name: str):
     """ Get the hack from smwcentral by loose name """
+
+    from persistence.persistence import get_hack_alias;
 
     # Search for aliases first
     window_name = utils.get_window_rom_name();

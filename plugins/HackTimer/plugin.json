@@ -1,6 +1,6 @@
 {
     "name": "Romhack clock",
     "description": "A clock to keep time of how much time you have spent on a romhack.",
-    "version": "1.0.0",
+    "version": "1.1.2",
     "entry_point": "HackClock"
   }

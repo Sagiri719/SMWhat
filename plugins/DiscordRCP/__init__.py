@@ -101,4 +101,5 @@ class DiscordRCPPlugin(Plugin):
             return True;
         else:
             logger.error("Error destroying Discord Rich Presence: No presence found");
-            self.display_message("Error destroying Discord Rich Presence: No presence found");
+            if message:
+                self.display_message("Error destroying Discord Rich Presence: No presence found");

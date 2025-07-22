@@ -5,6 +5,7 @@ Plugin class that provides a common interface for all plugins.
 from abc import ABC, abstractmethod
 from core.hack_content import HackContent
 from presentation.ui import UI
+from persistence.persistence import get_plugin_data, persist_plugin_data, get_plugin_data_map
 
 class Plugin(ABC):
 
@@ -42,6 +43,24 @@ class Plugin(ABC):
         Query the current hack being played
         """
         return self.ui.controller.get_hack();
+
+    def persist_data(self, key: str, data: any):
+        """
+        Persist data from the plugin
+        """
+        persist_plugin_data(self, key, data);
+
+    def get_persisted_data(self, key: str):
+        """
+        Get persisted data from the plugin
+        """
+        return get_plugin_data(self, key);
+
+    def get_plugin_data_map(self):
+        """
+        Get the plugin data map
+        """
+        return get_plugin_data_map(self);
 
     def query_root(self):
         """

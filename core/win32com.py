@@ -50,7 +50,8 @@ def get_emulator_window(emu: Emulator) -> str:
     return window_name;
 
 def monitor_process_async(pid, on_exit, stop_event) -> threading.Thread:
-    
+    from core.constants import ACTIVE_MONITOR_SLEEP_DELAY;
+
     def monitor():
         try:
             process = psutil.Process(pid)
@@ -58,7 +59,7 @@ def monitor_process_async(pid, on_exit, stop_event) -> threading.Thread:
                 if stop_event.is_set():
                     logger.info(f"Stopping process monitor for {pid}");
                     return;
-                time.sleep(1);
+                time.sleep(ACTIVE_MONITOR_SLEEP_DELAY);
             on_exit();
         except psutil.NoSuchProcess:
             logger.exception(f"Process {pid} doesn't exist anymore?");

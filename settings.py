@@ -53,7 +53,6 @@ def init_logging():
     );
     logger.info("\n\nApp started at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"));
 
-
 def load_settings_from_file():
     global app_config;
 
@@ -76,14 +75,14 @@ def load_settings_from_file():
 
         # Check if the UI mode is valid
         if app_config["ui"] >= len(UI_MODES):
-            logger.error("Nonsupported UI mode in settings.json! Defaulting to GUI.");
+            logger.error("Unsupported UI mode in settings.json! Defaulting to GUI.");
             app_config["ui"] = 0;
 
 def change_language(lang):
     global app_config;
 
     # Check if the language is valid
-    if lang not in ["en", "pt", "jp"]:
+    if lang not in SUPPORTED_LANGUAGES:
         logger.error("Nonsupported language! Defaulting to English.");
         lang = "en";
 

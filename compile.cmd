@@ -3,6 +3,7 @@ python -m PyInstaller --onefile -w ^
 --add-data "settings.json;." ^
 --add-data "LICENSE;." ^
 --add-data "persistence\data.json;persistence" ^
+--add-data "persistence\plugin_data.json;persistence" ^
 --add-data "presentation\languages;presentation\languages" ^
 --add-data "res;res" ^
 --add-data "plugins;plugins" ^

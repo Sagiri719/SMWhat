@@ -18,7 +18,6 @@ class MarqueeLabel:
         self.label.pack(pady=5, fill=tk.X);
 
         self.label_width = self.label.winfo_width();
-
         
         self.pos = 0;
         self.speed = speed;

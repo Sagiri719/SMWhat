@@ -1,5 +1,6 @@
 import os;
 import sys;
+import json;
 
 def resource_path(relative_path):
     """ Get the absolute path to the resource"""
@@ -17,22 +18,22 @@ def levenshtein_distance(s1, s2):
     """
     
     if len(s1) < len(s2):
-        return levenshtein_distance(s2, s1)
+        return levenshtein_distance(s2, s1);
 
     if len(s2) == 0:
-        return len(s1)
+        return len(s1);
 
     previous_row = range(len(s2) + 1)
     for i, c1 in enumerate(s1):
-        current_row = [i + 1]
+        current_row = [i + 1];
         for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1
-            deletions = current_row[j] + 1
-            substitutions = previous_row[j] + (c1 != c2)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
+            insertions = previous_row[j + 1] + 1;
+            deletions = current_row[j] + 1;
+            substitutions = previous_row[j] + (c1 != c2);
+            current_row.append(min(insertions, deletions, substitutions));
+        previous_row = current_row;
 
-    return previous_row[-1]
+    return previous_row[-1];
 
 def get_window_rom_name() -> str:
     """ Get the name of the rom from the emulator window name"""
@@ -62,3 +63,20 @@ def get_source_code() -> str:
 
 def get_icon():
     return resource_path("res/icon.ico");
+
+def exists_or_dump(target_obj: dict, path: str) -> dict:
+    """
+    Check if the data file exists, if not, create it with the target object.
+    """
+
+    # Check if the data file exists
+    if not os.path.exists(resource_path(path)):
+        # Create the data file
+        with open(resource_path(path), "w") as f:
+            json.dump(target_obj, f, indent=4);
+    else:
+        # Load the data file
+        with open(resource_path(path), "r") as f:
+            target_obj = json.load(f);
+
+    return target_obj;

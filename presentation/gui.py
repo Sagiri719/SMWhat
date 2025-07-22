@@ -185,9 +185,9 @@ class GuiApp(UI):
 
         # Data menu
         self.data_menu = tkinter.Menu(self.menubar, tearoff=0);
-        self.data_menu.add_command(label=t("forget"));
-        self.data_menu.add_command(label=t("reset"));
-        self.data_menu.add_command(label=t("clear_logs"), command=lambda: settings.clear_logs());
+        self.data_menu.add_command(label=t("forget"), command=lambda: self.forget_hack_aliases());
+        self.data_menu.add_command(label=t("reset"), command=lambda: self.reset_settings());
+        self.data_menu.add_command(label=t("clear_logs"), command=lambda: self.clear_logs());
 
         # Plugins menu
         self.plugins_menu = tkinter.Menu(self.menubar, tearoff=0);
@@ -209,6 +209,16 @@ class GuiApp(UI):
         self.menubar.add_cascade(label=t("language"), menu=self.language_menu);
         self.menubar.add_cascade(label=t("plugins"), menu=self.plugins_menu);
         self.menubar.add_cascade(label=t("help"), menu=self.help_menu);
+
+    def clear_logs(self):
+        settings.clear_logs();
+        self.display_message(t("logs_cleared"));
+
+    def reset_settings(self):
+        pass;
+
+    def forget_hack_aliases(self):
+        pass;
 
     def set_language(self, lang: str):
 
@@ -236,6 +246,9 @@ class GuiApp(UI):
         self.status_bar.pack(side=tkinter.BOTTOM, fill=tkinter.X);
 
     def on_close(self):
+
+        # Trigger plugin event for closing
+        self.plugin_event_all("cleanup");
 
         if self.controller.monitor_stop_event:
             self.controller.monitor_stop_event.set()
@@ -326,13 +339,13 @@ class GuiApp(UI):
 
     def on_emulator_close(self):
         
+        self.plugin_event_all("on_hack_exit");
+
         self.display_message(t("not_detected"));
 
         # Redefine hack info
         self.controller.hack = None;
         self.hack_name.set(t("hack_name"));
-
-        self.plugin_event_all("on_hack_exit");
 
         # Reset hack image
         self.hack_image = ImageTk.PhotoImage(Image.new("RGB", self.controller.hack_image_dimensions, color="white"));

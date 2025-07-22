@@ -12,7 +12,7 @@ bizhawk = Emulator("BizHawk", "BizHawk", lambda wname: wname.split("[SNES]")[0].
 emulator_list = [
     snes9x,
     bizhawk
-]
+];
 
 def get_emulator_by_name(name):
     """
