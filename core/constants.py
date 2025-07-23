@@ -21,6 +21,7 @@ TIMEOUT = 10  # Timeout for requests
 
 SUPPORTED_LANGUAGES = ["en", "pt", "jp"];
 
+NAMEDPIPE_SERVER_NAME = "SMWhatCheatsPipe"; # Name of the named pipe server for inter-process communication with the BizHawk tool
 ACTIVE_MONITOR_SLEEP_DELAY = 1; # The amount of time to wait before checking for active monitor again
 
 VERSION = "1.0.1";

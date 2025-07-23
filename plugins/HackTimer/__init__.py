@@ -27,6 +27,7 @@ class HackClock(Plugin):
     def cleanup(self):
         
         # Save the current time
+        self.resume_clock(); # Resume to take into account pause time when closing
         self.persist_current_time();
 
     def get_save_name(self) -> str:

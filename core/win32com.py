@@ -4,8 +4,11 @@ Communicate with Windows api to find emulator window
 author: @Sagiri721
 """
 
+import os;
 import win32gui;
 import win32process;
+import win32pipe;
+import win32file;
 import psutil
 import time
 import threading
@@ -68,3 +71,42 @@ def monitor_process_async(pid, on_exit, stop_event) -> threading.Thread:
     thread = threading.Thread(target=monitor, daemon=True);
     thread.start();
     return thread;
+
+def query_namedpipe_server(message: str):
+    
+    """Query the named pipe server for the active emulator"""
+    NAMEDPIPE_SERVER_NAME = "SMWhatCheatsPipe";
+
+    pipe_name = f"\\\\.\\pipe\\{NAMEDPIPE_SERVER_NAME}";    
+    handle = win32file.CreateFile(
+        pipe_name,
+        win32file.GENERIC_READ | win32file.GENERIC_WRITE,
+        0,  # No sharing
+        None,  # Default security attributes
+        win32file.OPEN_EXISTING,
+        0,  # No special attributes
+        None  # No template file
+    );
+
+    try:
+        # Write message to the named pipe server
+        if message:
+            win32file.WriteFile(handle, (message + "\n").encode('utf-8'));
+            logger.info(f"Sent message to named pipe server: {message}");
+        else:
+            logger.warning("No message provided to send to named pipe server");
+
+        # Read data from the pipe
+        data = win32file.ReadFile(handle, 1024);
+        if data:
+            
+            print(f"message: {data}")
+
+        else:
+            logger.warning("No data received from named pipe server");
+            return None;
+    except Exception as e:
+        logger.exception(f"Error reading from named pipe server: {e}");
+        return None;
+    finally:
+        win32file.CloseHandle(handle);

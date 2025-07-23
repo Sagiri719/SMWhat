@@ -172,3 +172,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+/cheats/BizHawk/
+/cheats/src/obj/
+/cheats/src/bin/
+/cheats/src/.vs/

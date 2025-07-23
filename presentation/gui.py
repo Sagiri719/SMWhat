@@ -6,7 +6,7 @@ import tkinter
 from tkinter import messagebox
 from tkinter import ttk 
 
-from core.win32com import get_emulator_window, get_pid_from_window_title, monitor_process_async;
+from core.win32com import get_emulator_window, get_pid_from_window_title, monitor_process_async, query_namedpipe_server;
 from core.smwccom import get_hack_by_name, search_for_hack;
 from core.emulator import emulator_list, get_emulator_by_name, Emulator;
 
@@ -294,6 +294,8 @@ class GuiApp(UI):
         self.hack_image_label.image = self.hack_image;  # Keep a reference to avoid garbage collection
 
     def find_hack(self):
+
+        query_namedpipe_server("READ WRAM 0x7E0010");
 
         window_name: str = utils.get_window_rom_name();
 

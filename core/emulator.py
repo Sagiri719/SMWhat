@@ -7,7 +7,7 @@ class Emulator:
 
 # Emulator definition
 snes9x = Emulator("Snes9x", "Snes9x", lambda wname: wname.split(" - ")[0]);
-bizhawk = Emulator("BizHawk", "BizHawk", lambda wname: wname.split("[SNES]")[0].strip());
+bizhawk = Emulator("BizHawk (recommended)", "BizHawk", lambda wname: wname.split("[SNES]")[0].strip());
 
 emulator_list = [
     snes9x,

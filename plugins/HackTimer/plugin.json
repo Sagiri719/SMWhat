@@ -1,6 +1,8 @@
 {
     "name": "Romhack clock",
+    "author": "Sagiri",
     "description": "A clock to keep time of how much time you have spent on a romhack.",
     "version": "1.1.2",
-    "entry_point": "HackClock"
+    "entry_point": "HackClock",
+    "dependencies": []
   }

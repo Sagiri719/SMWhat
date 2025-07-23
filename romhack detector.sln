@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cheats", "cheats", "{AE7C74F7-458A-4897-BECF-FC9ED2DD902E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cheats", "cheats\src\cheats.csproj", "{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D64C3687-7FD7-4DB0-9CF4-0EA7D55632E0} = {AE7C74F7-458A-4897-BECF-FC9ED2DD902E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AD048D0-A873-4EE1-8C19-25C33D1CD353}
+	EndGlobalSection
+EndGlobal

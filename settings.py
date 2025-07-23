@@ -3,7 +3,7 @@ import json;
 import logging;
 import datetime;
 
-from core.emulator import snes9x, emulator_list, Emulator, get_emulator_by_name;
+from core.emulator import emulator_list, Emulator, get_emulator_by_name, bizhawk;
 from presentation.translations import import_translation;
 from persistence.persistence import init_persistence;
 
@@ -13,7 +13,7 @@ from utils import resource_path;
 logger = logging.getLogger(__name__);
 
 app_config = {
-    "emulator": snes9x,
+    "emulator": bizhawk,
     "ui": 0,
     "lang": "en",
     "language": None,
@@ -70,8 +70,8 @@ def load_settings_from_file():
                 break;
 
         if type(app_config["emulator"]) == str:
-            logger.error("Nonsupported emulator in settings.json! Defaulting to Snes9x.");
-            app_config["emulator"] = snes9x;
+            logger.error("Nonsupported emulator in settings.json! Defaulting to Bizhawk.");
+            app_config["emulator"] = bizhawk;
 
         # Check if the UI mode is valid
         if app_config["ui"] >= len(UI_MODES):

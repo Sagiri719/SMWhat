@@ -31,6 +31,9 @@ def get_all_plugins(plugin_dir: str, root) -> list:
 
             plugin_config = json.load(open(config_file));
             logger.debug(f"{plugin_config.get('name')}({plugin_config.get('version')}) loaded");
+
+            # Check if dependencies are met
+            dependencies = plugin_config.get("dependencies", []);
             
             # Load the plugin module
             # Create module specification
