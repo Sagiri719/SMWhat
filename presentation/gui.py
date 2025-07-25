@@ -9,6 +9,7 @@ from tkinter import ttk
 from core.win32com import get_emulator_window, get_pid_from_window_title, monitor_process_async, query_cheat_server;
 from core.smwccom import get_hack_by_name, search_for_hack;
 from core.emulator import emulator_list, get_emulator_by_name, Emulator;
+from core.cheats.memory_peeker import kill_watching_threads;
 
 from PIL import Image, ImageTk
 import requests
@@ -250,6 +251,8 @@ class GuiApp(UI):
 
     def on_close(self):
 
+        kill_watching_threads();
+
         # Trigger plugin event for closing
         self.plugin_event_all("cleanup");
 
@@ -274,6 +277,8 @@ class GuiApp(UI):
         
         # Save the selected emulator
         settings.change_emulator(emulator);
+
+        self.plugin_event_all("on_emulator_changed");
 
     def load_image(self, url: str):
 
@@ -343,6 +348,9 @@ class GuiApp(UI):
             self.display_message(t("monitoring_error"));
 
     def on_emulator_close(self):
+
+        # Kill any watching threads        
+        kill_watching_threads();
         
         self.plugin_event_all("on_hack_exit");
 

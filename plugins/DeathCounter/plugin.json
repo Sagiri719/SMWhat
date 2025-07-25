@@ -1,0 +1,8 @@
+{
+    "name": "Death counter",
+    "author": "Sagiri",
+    "description": "A counter for the amount of deaths you've had on this hack",
+    "version": "1.0.0",
+    "entry_point": "DeathCounter",
+    "dependencies": []
+  }

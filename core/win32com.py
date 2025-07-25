@@ -74,12 +74,10 @@ def monitor_process_async(pid, on_exit, stop_event) -> threading.Thread:
 def test_server_connection(retries: int = 3, delay: float = 0.5) -> bool:
     """Test if the server is reachable"""
 
-    host = "127.0.0.1";
-    port = 9999;
-
+    from core.constants import CHEAT_SERVER_HOST, CHEAT_SERVER_PORT
     for attempt in range(retries):
         try:
-            with socket.create_connection((host, port), timeout=delay):
+            with socket.create_connection((CHEAT_SERVER_HOST, CHEAT_SERVER_PORT), timeout=delay):
                 logger.info("Server is reachable");
                 return True
         except (socket.timeout, ConnectionRefusedError) as e:
@@ -92,13 +90,10 @@ def test_server_connection(retries: int = 3, delay: float = 0.5) -> bool:
 def query_cheat_server(message: str):
     """Query the cheat server"""
 
-    host = "127.0.0.1";
-    port = 9999;
-
-    with socket.create_connection((host, port), timeout=5) as sock:
+    from core.constants import CHEAT_SERVER_HOST, CHEAT_SERVER_PORT
+    with socket.create_connection((CHEAT_SERVER_HOST, CHEAT_SERVER_PORT), timeout=5) as sock:
         sock_file = sock.makefile(mode='rw');
 
-        print(f"Sending: {message}");
         sock_file.write(message + "\n");
         sock_file.flush();
 

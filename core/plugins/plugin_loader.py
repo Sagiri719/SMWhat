@@ -63,6 +63,9 @@ def get_all_plugins(plugin_dir: str, root) -> list:
             logger.debug(f"Skipping non-plugin folder: {name}. Missing __init__.py or plugin.json file.");
             continue;
 
+    # Sort plugins by priority
+    plugins.sort(key=lambda p: p.config.get("priority", 999), reverse=False);
+
     return plugins;
 
 def load_plugins(root):

@@ -21,7 +21,8 @@ TIMEOUT = 10  # Timeout for requests
 
 SUPPORTED_LANGUAGES = ["en", "pt", "jp"];
 
-NAMEDPIPE_SERVER_NAME = "SMWhatCheatsPipe"; # Name of the named pipe server for inter-process communication with the BizHawk tool
+CHEAT_SERVER_HOST = "127.0.0.1"; # Host for the cheat server
+CHEAT_SERVER_PORT = 9999; # Port for the cheat server
 ACTIVE_MONITOR_SLEEP_DELAY = 1; # The amount of time to wait before checking for active monitor again
 
 VERSION = "1.0.1";

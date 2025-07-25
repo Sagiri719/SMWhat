@@ -4,8 +4,10 @@ Plugin class that provides a common interface for all plugins.
 
 from abc import ABC, abstractmethod
 from core.hack_content import HackContent
+from core.win32com import test_server_connection;
 from presentation.ui import UI
 from persistence.persistence import get_plugin_data, persist_plugin_data, get_plugin_data_map
+import settings
 
 class Plugin(ABC):
 
@@ -71,6 +73,19 @@ class Plugin(ABC):
         
         return None;
 
+    def query_emulator(self):
+        """
+        Query what emulator is being used.
+        """
+        return settings.app_config.get("emulator", None);
+
+    def test_cheats(self, retries=1, delay=0.5) -> bool:
+        """
+        Test the connection to the cheat server.
+        This method should be overridden by subclasses to provide specific server connection logic.
+        """
+        return test_server_connection(retries, delay);
+
     @abstractmethod
     def start(self):
         """
@@ -102,3 +117,11 @@ class Plugin(ABC):
         Pack the UI elements for the plugin.
         This method should be overridden by subclasses to provide specific UI elements.
         """
+
+    # Optional methods that can be overridden by subclasses
+    def on_emulator_changed(self):
+        """
+        Called when the emulator is changed.
+        This method should be overridden by subclasses to handle emulator changes.
+        """
+        pass;

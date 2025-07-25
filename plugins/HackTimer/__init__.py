@@ -60,21 +60,14 @@ class HackClock(Plugin):
             logger.warning("Hack is None, skipping time persistence");
             return;
 
-        elapsed_time = 0;
-        # TODO: FIX THISS!
-        # Read time from clock label
-        # I know it sucks, but this fucking clock is so poorly designed that 
-        # this is the most reliable way to get the elapsed time
-        # It also removes the cool decimal precision we had
-        hours, minutes, seconds = self.clock_timer.get().split(":");
-        elapsed_time = int(hours) * 3600 + int(minutes) * 60 + int(seconds);
-
+        elapsed_time = time.time() - self.start_time;
         logger.info(f"Persisting time: {elapsed_time} for {self.get_save_name()}");
         self.persist_data(self.get_save_name(), {"time": elapsed_time});
 
     def on_hack_exit(self):
         
         # Save the current time
+        self.resume_clock(); # Resume to take into account pause time when closing
         self.persist_current_time();
 
         self.start_time = -1;

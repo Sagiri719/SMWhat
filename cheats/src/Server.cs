@@ -91,7 +91,7 @@ namespace cheats
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Error processing request: {ex.Message}");
+                                Console.WriteLine($"ERR: error processing request: {ex.Message}");
                                 writer.WriteLine($"ERR: {ex.Message}");
                             }
                         }
@@ -143,7 +143,7 @@ namespace cheats
                         return;
                     }
 
-                    writer.WriteLine($"{{ size: \"{data.Length}\", data: [{string.Join(", ", data.Select(d => $"\"{d.ToString()}\""))}}}");
+                    writer.WriteLine($"{{ \"size\": \"{data.Length}\", \"data\": [{string.Join(", ", data.Select(d => $"{d}"))}]}}");
 
                     break;
                 case "rmn":

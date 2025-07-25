@@ -20,11 +20,17 @@
                 "time": 0.3773978
             },
             "Invictus": {
-                "time": 0
+                "time": 1753479019.9278023
+            },
+            "Super Dram World": {
+                "time": 41.02351117134094
             }
         },
         "Discord Rich Presence": {
             "auto_enable": true
+        },
+        "Death counter": {
+            "should_reconnect": false
         }
     }
 }
