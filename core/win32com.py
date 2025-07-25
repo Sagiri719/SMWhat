@@ -7,12 +7,11 @@ author: @Sagiri721
 import os;
 import win32gui;
 import win32process;
-import win32pipe;
-import win32file;
 import psutil
 import time
 import threading
 import logging
+import socket;
 
 from core.emulator import Emulator;
 
@@ -72,41 +71,36 @@ def monitor_process_async(pid, on_exit, stop_event) -> threading.Thread:
     thread.start();
     return thread;
 
-def query_namedpipe_server(message: str):
-    
-    """Query the named pipe server for the active emulator"""
-    NAMEDPIPE_SERVER_NAME = "SMWhatCheatsPipe";
+def test_server_connection(retries: int = 3, delay: float = 0.5) -> bool:
+    """Test if the server is reachable"""
 
-    pipe_name = f"\\\\.\\pipe\\{NAMEDPIPE_SERVER_NAME}";    
-    handle = win32file.CreateFile(
-        pipe_name,
-        win32file.GENERIC_READ | win32file.GENERIC_WRITE,
-        0,  # No sharing
-        None,  # Default security attributes
-        win32file.OPEN_EXISTING,
-        0,  # No special attributes
-        None  # No template file
-    );
+    host = "127.0.0.1";
+    port = 9999;
 
-    try:
-        # Write message to the named pipe server
-        if message:
-            win32file.WriteFile(handle, (message + "\n").encode('utf-8'));
-            logger.info(f"Sent message to named pipe server: {message}");
-        else:
-            logger.warning("No message provided to send to named pipe server");
+    for attempt in range(retries):
+        try:
+            with socket.create_connection((host, port), timeout=delay):
+                logger.info("Server is reachable");
+                return True
+        except (socket.timeout, ConnectionRefusedError) as e:
+            logger.warning(f"Attempt {attempt + 1}/{retries} failed: {e}")
+            time.sleep(delay)
 
-        # Read data from the pipe
-        data = win32file.ReadFile(handle, 1024);
-        if data:
-            
-            print(f"message: {data}")
+    logger.error("Failed to connect to the server after multiple attempts");
+    return False;
 
-        else:
-            logger.warning("No data received from named pipe server");
-            return None;
-    except Exception as e:
-        logger.exception(f"Error reading from named pipe server: {e}");
-        return None;
-    finally:
-        win32file.CloseHandle(handle);
+def query_cheat_server(message: str):
+    """Query the cheat server"""
+
+    host = "127.0.0.1";
+    port = 9999;
+
+    with socket.create_connection((host, port), timeout=5) as sock:
+        sock_file = sock.makefile(mode='rw');
+
+        print(f"Sending: {message}");
+        sock_file.write(message + "\n");
+        sock_file.flush();
+
+        response = sock_file.readline().strip();
+        return response;

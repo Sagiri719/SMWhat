@@ -23,7 +23,8 @@ namespace cheats
 
         public static readonly Dictionary<string, Operation> CommandMap = new Dictionary<string, Operation>
         {
-            { "read", new Operation("READ", @"[A-Z]+ 0x[0-9A-F]+") },
+            { "read", new Operation("READ", @"[A-Z]+ [0-9]+ ([0-9]+)?") },
+            { "rmn", new Operation("RMN") }
         };
     };
 

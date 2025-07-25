@@ -14,6 +14,8 @@ namespace cheats
     [ExternalTool("smwhat_generic_cheats")]
     public partial class Cheats : ToolFormBase, IExternalToolForm
     {
+        private CommandServer _server;
+
         protected override string WindowTitleStatic
             => "SMWhat - Cheats Tool";
 
@@ -45,7 +47,7 @@ namespace cheats
 
             Button dothingsbutton = new System.Windows.Forms.Button
             {
-                Text = "Read memory NOW!",
+                Text = "Start server?",
                 Dock = System.Windows.Forms.DockStyle.Bottom,
                 Height = 40,
                 DialogResult = System.Windows.Forms.DialogResult.OK,
@@ -55,47 +57,44 @@ namespace cheats
             {
                 try
                 {
-                    ReadMemory();
-                    MessageBox.Show("Memory read successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (_server == null)
+                    {
+                        _server = new CommandServer(this);
+                        MessageBox.Show("Pipe server started!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Server already running.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ReadMemory();
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error reading memory: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Failed to start pipe server:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
 
             Controls.Add(dothingsbutton);
             ResumeLayout(performLayout: false);
             PerformLayout();
-
-            // Begin pipe server
-            new PipeServer();
         }
 
-        public void ReadMemory()
+        internal string GetRomName() {
+            return EmulatorApi.GetGameInfo()?.Name;
+        }
+
+        internal uint[] ReadMemory(long startAddress = 0x00000000, long size = 1000, string domain = "WRAM")
         {
-            var s = MemoryApi.GetMemoryDomainList();
+            uint[] buffer = new uint[size];
+            for (long i = startAddress; i < startAddress + size; i++)
+                buffer[i - startAddress] = MemoryApi.ReadByte(i, domain);
 
-            string domains = string.Join(", ", s);
-            foreach (string d in s)
-            {
-                domains += ($"{d} ");
-            }
+            return buffer;
+        }
 
-            MessageBox.Show($"Available memory domains: {domains}", "Memory Domains", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            string domain = "VRAM";
-            long domainSize = 1000;
-
-            long startAddress = 0x00000000;
-            string dump = "";
-            for (long i = 0; i < domainSize; i += 4)
-            {
-                uint value = MemoryApi.ReadU32(startAddress + i, domain);
-                dump += $"{startAddress + i:X8}: {value:X8}\n";
-            }
-
-            MessageBox.Show(dump, $"Memory Dump of {domain}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        internal IReadOnlyCollection<string> GetAvailableDomains()
+        {
+            return MemoryApi.GetMemoryDomainList();
         }
     }
 }

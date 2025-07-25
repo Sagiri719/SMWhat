@@ -2,7 +2,7 @@
     "name": "Discord Rich Presence",
     "author": "Sagiri",
     "description": "Updates Discord status based on current ROM hack",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "entry_point": "DiscordRCPPlugin",
     "dependencies": []
   }

@@ -15,8 +15,6 @@ class UI(ABC):
         from core.plugins.plugin_loader import load_plugins;
         self.plugins = load_plugins(self);
 
-        self.plugin_event_all("start");
-
         self.controller: HackController = HackController();
 
     @abstractmethod

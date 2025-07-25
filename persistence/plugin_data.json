@@ -17,11 +17,14 @@
                 "time": 112.563649892807
             },
             "Chicanery Beginner Edition": {
-                "time": 1753299321.3773978
+                "time": 0.3773978
             },
             "Invictus": {
-                "time": 29.04006004333496
+                "time": 0
             }
+        },
+        "Discord Rich Presence": {
+            "auto_enable": true
         }
     }
 }

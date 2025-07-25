@@ -1,6 +1,9 @@
 import os;
 import sys;
 import json;
+import logging;
+
+logger = logging.getLogger(__name__);
 
 def resource_path(relative_path):
     """ Get the absolute path to the resource"""
@@ -38,13 +41,23 @@ def levenshtein_distance(s1, s2):
 def get_window_rom_name() -> str:
     """ Get the name of the rom from the emulator window name"""
         
-    from core.win32com import get_emulator_window;
+    from core.win32com import test_server_connection, get_emulator_window;
     import settings;
 
-    window_name: str = get_emulator_window(settings.app_config["emulator"]);
+    # Test pipe connection to decide where to get the ROM name from
+    if test_server_connection(retries=1):
+        logger.info("Using Bizhawk cheat server to get ROM name");
+        from core.cheats.memory_peeker import get_rom_name;
+        window_name: str = get_rom_name();
 
-    if (window_name != ""):
-        window_name = settings.app_config["emulator"].hack_name_getter(settings.app_config["emulator"].hack_name_getter(window_name));
+    else:
+        logger.warning("Bizhawk cheat server connection failed, falling back to window title for ROM name");
+        logger.info("Using window title to get ROM name");
+
+        window_name: str = get_emulator_window(settings.app_config["emulator"]);
+
+        if (window_name != ""):
+            window_name = settings.app_config["emulator"].hack_name_getter(window_name);
 
     return window_name;
 

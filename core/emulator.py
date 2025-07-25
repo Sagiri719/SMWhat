@@ -1,13 +1,25 @@
 class Emulator:
 
-    def __init__(self, display_name, window_name, hack_name_getter):
-        self.display_name = display_name
-        self.window_name = window_name.lower()
-        self.hack_name_getter = hack_name_getter
+    def __init__(self, display_name, window_name, hack_name_getter, support_pipe_server=False):
+        self.display_name = display_name;
+        self.window_name = window_name.lower();
+        self.hack_name_getter = hack_name_getter;
+        self.support_pipe_server = support_pipe_server;
+
+def snes9x_name_getter(window_name: str) -> str:
+    if " - " in window_name:
+        return wname.split(" - ")[0];
+    return None;
+
+def bizhawk_name_getter(window_name: str) -> str:
+    
+    if "[SNES]" in window_name:
+        return window_name.split("[SNES]")[0].strip();
+    return None;
 
 # Emulator definition
-snes9x = Emulator("Snes9x", "Snes9x", lambda wname: wname.split(" - ")[0]);
-bizhawk = Emulator("BizHawk (recommended)", "BizHawk", lambda wname: wname.split("[SNES]")[0].strip());
+snes9x = Emulator("Snes9x", "Snes9x", lambda wname: snes9x_name_getter(wname), False);
+bizhawk = Emulator("BizHawk (recommended)", "BizHawk", lambda wname: bizhawk_name_getter(wname), True);
 
 emulator_list = [
     snes9x,

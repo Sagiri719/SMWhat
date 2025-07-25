@@ -6,7 +6,7 @@ import tkinter
 from tkinter import messagebox
 from tkinter import ttk 
 
-from core.win32com import get_emulator_window, get_pid_from_window_title, monitor_process_async, query_namedpipe_server;
+from core.win32com import get_emulator_window, get_pid_from_window_title, monitor_process_async, query_cheat_server;
 from core.smwccom import get_hack_by_name, search_for_hack;
 from core.emulator import emulator_list, get_emulator_by_name, Emulator;
 
@@ -57,6 +57,9 @@ class GuiApp(UI):
         self.root.grid_columnconfigure(1, weight=1);
 
         self.root.iconbitmap(utils.get_icon());
+
+        # Tell plugins to start
+        self.plugin_event_all("start");
 
         # Create UI
         self.init_menu();
@@ -295,11 +298,11 @@ class GuiApp(UI):
 
     def find_hack(self):
 
-        query_namedpipe_server("READ WRAM 0x7E0010");
+        # query_namedpipe_server("READ WRAM 0x7E0010");
 
         window_name: str = utils.get_window_rom_name();
 
-        if window_name != "":
+        if window_name != "" and window_name is not None:
 
             hack = get_hack_by_name(window_name);
 

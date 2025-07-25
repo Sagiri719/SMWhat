@@ -15,29 +15,45 @@ class DiscordRCPPlugin(Plugin):
     """
 
     COOLDOWN_TIME = 10; 
-    last_cooldown = 0; 
+    last_cooldown = 0;
 
     def __init__(self, config, ui):
         super().__init__(config, ui);
         self.discord_rpc = None;
 
     def start(self):
+        
+        self.auto_enable = tkinter.BooleanVar();
+        
+        should_start = self.get_persisted_data("auto_enable");
+        if should_start is None:
+            should_start = False;
+            self.persist_data("auto_enable", should_start);
+
+        self.auto_enable.set(should_start);
+
         logger.info("DiscordRCPPlugin started");
 
     def cleanup(self):
         self.destroy_presence(message = False);
 
     def on_hack_start(self, hack): 
-        pass;
+
+        if self.auto_enable.get():
+            self.toggle_presence();
 
     def on_hack_exit(self):
-        pass;
+        
+        if self.discord_rpc is not None:
+            self.destroy_presence(message=False);
 
     def define_menu_options(self, my_menu):
 
         # Add menu items
         my_menu.add_command(label="Set Presence", command=self.set_presence);
         my_menu.add_command(label="Destroy Presence", command=self.destroy_presence);
+        my_menu.add_separator();
+        my_menu.add_checkbutton(label="Auto Enable", variable=self.auto_enable, command=lambda: self.persist_data("auto_enable", self.auto_enable.get()));
 
     def pack_ui(self, frame: tkinter.Frame):
         
