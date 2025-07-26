@@ -35,6 +35,7 @@ class DiscordRCPPlugin(Plugin):
         logger.info("DiscordRCPPlugin started");
 
     def cleanup(self):
+        
         self.destroy_presence(message = False);
 
     def on_hack_start(self, hack): 

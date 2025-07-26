@@ -58,11 +58,15 @@ def read_memory_address(address: int, domain: Domains) -> int:
 def watch_memory_address(address: int, domain: Domains, callback, delay=0.1) -> None:
     """Watch a memory address in the emulator and call the callback when it changes."""
 
-    def watch_address(address: int, domain: Domains, callback, delay) -> None:
+    def watch_address(address: int, domain: Domains, callback, delay, stop_event) -> None:
         
         logger.info(f"Starting to watch memory address {address} in domain {domain.value} from thread {threading.current_thread().name}");
         previous_value: int = -1;
         while True:
+            if stop_event.is_set():
+                logger.info(f"Stopping watching thread for address {address} in domain {domain.value}");
+                return;
+
             value = read_memory_address(address, domain);
             if value is not None:
                 
@@ -75,16 +79,17 @@ def watch_memory_address(address: int, domain: Domains, callback, delay=0.1) -> 
 
             threading.Event().wait(delay);
     
-    watcher_thread = threading.Thread(target=watch_address, args=(address, domain, callback, delay), daemon=True);
+    stop_event = threading.Event();
+    watcher_thread = threading.Thread(target=watch_address, args=(address, domain, callback, delay, stop_event), daemon=True);
+    watching_threads.append((watcher_thread, stop_event));
     watcher_thread.start();
-    watching_threads.append(watcher_thread);
 
 def kill_watching_threads() -> None:
     """Kill all watching threads."""
     for thread in watching_threads:
-        if thread.is_alive():
-            logger.info(f"Killing watching thread: {thread.name}");
-            thread.join(timeout=0.1); # Wait for the thread to finish if it's still running with a tomeout
+        if thread[0].is_alive():
+            thread[1].set();
+            thread[0].join(timeout=1);
     watching_threads.clear();
     logger.info("All watching threads have been killed.");
 

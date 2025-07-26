@@ -73,6 +73,15 @@ class Plugin(ABC):
         
         return None;
 
+    def query_menu_bar(self):
+        """
+        Query the menubar of the UI
+        """
+        if hasattr(self.ui, "menubar"):
+            return self.ui.menubar;
+        
+        return None;
+
     def query_emulator(self):
         """
         Query what emulator is being used.

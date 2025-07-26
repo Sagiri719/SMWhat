@@ -3,10 +3,15 @@ import time;
 from datetime import datetime, timedelta;
 
 from core.plugins.plugin import Plugin
+from plugins.HackTimer.stopwatch import Stopwatch
 
 import logging
 
 logger = logging.getLogger(__name__);
+
+HIGH_FREQUENCY = 30 * 1000; # Once every half a minute
+MEDIUM_FREQUENCY = 60 * 10 * 1000; # Once every 10 minutes
+LOW_FREQUENCY = 60 * 30 * 1000; # Once every half an hour
 
 class HackClock(Plugin):
     """
@@ -17,27 +22,29 @@ class HackClock(Plugin):
     def __init__(self, config, ui):
         super().__init__(config, ui); 
 
-        self.is_paused = False;
-        self.start_time = -1;
-        self.last_pause_time = -1;
+        self.stopwatch = Stopwatch();
 
     def start(self):
         logger.info("HackClock started");
 
+        self.backup_frequency = tkinter.IntVar();
+
+        saved_frequency = self.get_persisted_data("backup_frequency");
+        if saved_frequency is None:
+            self.set_frequency(MEDIUM_FREQUENCY);
+
+        self.backup_frequency.set(saved_frequency);
+        self.last_backup = time.time();
+
     def cleanup(self):
-        
-        # Save the current time
-        self.resume_clock(); # Resume to take into account pause time when closing
-        self.persist_current_time();
+        if self.last_hack is not None:
+            self.persist_current_time();
 
     def get_save_name(self) -> str:
         return self.last_hack.title;
 
     last_hack = None;
     def on_hack_start(self, hack): 
-
-        self.start_time = time.time();
-        self.is_paused = False;
 
         # Start the clock update loop
         self.last_hack = hack;
@@ -50,41 +57,48 @@ class HackClock(Plugin):
             # Get the last saved time
             last_time = data["time"];
             logger.info(f"Last saved time: {last_time} for {self.get_save_name()}");
-            self.start_time -= last_time;
+            self.stopwatch.set_time(last_time);
     
+        self.stopwatch.start();
         self.update_clock();
 
-    def persist_current_time(self):
+    def persist_current_time(self, message=True):
 
         if self.last_hack is None:
             logger.warning("Hack is None, skipping time persistence");
             return;
 
-        elapsed_time = time.time() - self.start_time;
-        logger.info(f"Persisting time: {elapsed_time} for {self.get_save_name()}");
+        elapsed_time = self.stopwatch.elapsed();
+        if message:
+            logger.info(f"Persisting time: {elapsed_time} for {self.get_save_name()}");
         self.persist_data(self.get_save_name(), {"time": elapsed_time});
 
     def on_hack_exit(self):
-        
+
         # Save the current time
-        self.resume_clock(); # Resume to take into account pause time when closing
         self.persist_current_time();
 
-        self.start_time = -1;
-        self.is_paused = False;
+        self.stopwatch.stop();
 
         # Reset the clock display
         self.clock_timer.set("00:00:00");
         self.pause_text.set("Pause");
 
+        self.last_hack = None;
+
     def update_clock(self):
 
-        if self.start_time != -1 and not self.is_paused:
-            
-            elapsed_time = time.time() - self.start_time;
+        if self.stopwatch.running:
 
+            elapsed_time = self.stopwatch.elapsed();
             elapsed_time_str = str(timedelta(seconds=elapsed_time));
+
             self.clock_timer.set(elapsed_time_str.split(".")[0]);
+
+            # Test for backup
+            if (time.time() - self.last_backup) > self.backup_frequency.get():
+                self.persist_current_time(False);
+                self.last_backup = time.time();
 
         # Schedule the next update
         self.query_root().after(1000, self.update_clock);
@@ -99,7 +113,34 @@ class HackClock(Plugin):
 
         my_menu.add_separator();
 
+        backup_frequency_menu = tkinter.Menu(self.query_menu_bar(), tearoff=0);
+        backup_frequency_menu.add_radiobutton(
+            label="High frequency",
+            variable=self.backup_frequency,
+            value=HIGH_FREQUENCY,
+            command=lambda: self.set_frequency(HIGH_FREQUENCY)
+        );
+
+        backup_frequency_menu.add_radiobutton(
+            label="Medium frequency",
+            variable=self.backup_frequency,
+            value=MEDIUM_FREQUENCY,
+            command=lambda: self.set_frequency(MEDIUM_FREQUENCY)
+        );
+
+        backup_frequency_menu.add_radiobutton(
+            label="Low frequency",
+            variable=self.backup_frequency,
+            value=LOW_FREQUENCY,
+            command=lambda: self.set_frequency(LOW_FREQUENCY)
+        );
+
+        my_menu.add_cascade(label="Set timer backup frequency", menu=backup_frequency_menu);
         my_menu.add_command(label="Consult hack clock table", command=lambda: self.open_clock_table());
+
+    def set_frequency(self, frequency: int):
+        self.backup_frequency.set(frequency);
+        self.persist_data("backup_frequency", self.backup_frequency.get());
 
     def pack_ui(self, frame: tkinter.Frame):
         
@@ -120,30 +161,25 @@ class HackClock(Plugin):
 
     def toggle_pause(self):
 
-        if self.is_paused:
-            self.resume_clock();
-            self.is_paused = False;
-        else:
-            self.is_paused = True;
-            self.last_pause_time = time.time();
+        if self.last_hack is None:
+            self.display_message("Cannot toggle pause, hack is not running.");
+            logger.warning("Cannot toggle pause, hack is not running");
+            return;
 
-        self.pause_text.set("Resume" if self.is_paused else "Pause");
+        if self.stopwatch.running:
+            self.stopwatch.pause();
+        else:
+            self.stopwatch.resume();
+
+        self.pause_text.set("Resume" if not self.stopwatch.running else "Pause");
 
         # Safety save
         self.persist_current_time();
 
-    def resume_clock(self):
-        
-        if self.last_pause_time != -1:
-            self.start_time += time.time() - self.last_pause_time;
-            self.last_pause_time = -1;
-
-        self.is_paused = False;
-
     def reset_clock(self):
-        self.start_time = time.time();
-        self.is_paused = False;
-        self.last_pause_time = -1;
+        
+        # Reset the stopwatch
+        self.stopwatch.reset();
 
         # Reset the clock display
         self.clock_timer.set("0:00:00");
@@ -184,7 +220,7 @@ class HackClock(Plugin):
             """
             # Convert to total seconds
             total_seconds = int(hours * 3600 + minutes * 60 + seconds);
-            self.start_time = time.time() - total_seconds;
+            self.stopwatch.set_time(total_seconds);
 
             # Update the clock display
             self.clock_timer.set(str(timedelta(seconds=total_seconds)).split(".")[0]);
@@ -192,9 +228,9 @@ class HackClock(Plugin):
             popup.destroy();
 
         # Get current time
-        if self.start_time != -1:
+        if self.stopwatch.running:
             
-            elapsed_time = time.time() - self.start_time;
+            elapsed_time = self.stopwatch.elapsed();
 
             elapsed_time_str = str(timedelta(seconds=elapsed_time));
             time_parts = elapsed_time_str.split(":");

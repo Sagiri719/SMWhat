@@ -11,16 +11,20 @@ CLIENT_ID = '1280548436843958282';
 
 def start_presence_for(hack: HackContent) -> Presence:
 
-    # Hack information
-    image: str = hack.image_url;
-    name: str = hack.title;
-    authors: str = hack.author_as_string();
+    try:
 
-    # Setup discord
-    RPC = Presence(CLIENT_ID);
-    RPC.connect();
+        # Hack information
+        image: str = hack.image_url;
+        name: str = hack.title;
+        authors: str = hack.author_as_string();
 
-    RPC.update(state=f"By {authors}", details=f"Playing {name}", large_image=image)
-    logger.info(f"Started Discord Rich Presence for {name} by {authors}");
+        # Setup discord
+        RPC = Presence(CLIENT_ID);
+        RPC.connect();
 
-    return RPC;
+        RPC.update(state=f"By {authors}", details=f"Playing {name}", large_image=image)
+        logger.info(f"Started Discord Rich Presence for {name} by {authors}");
+
+        return RPC;
+    except:
+        return None;

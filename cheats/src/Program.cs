@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
@@ -36,6 +37,11 @@ namespace cheats
         {
             // string gameName = EmulatorApi.GetGameInfo()?.Name;
             // MessageBox.Show($"Restarting tool for game: {gameName}", "Restart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (_server == null)
+            {
+                _server = new CommandServer(this);
+                MessageBox.Show("Pipe server started!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         public Cheats()
@@ -44,53 +50,26 @@ namespace cheats
             ClientSize = new Size(220, 80);
             SuspendLayout();
             Controls.Add(new System.Windows.Forms.Label { AutoSize = true, Text = "SMWhat serving!", Dock = System.Windows.Forms.DockStyle.Top, Height = 40, TextAlign = ContentAlignment.MiddleCenter, Font = new Font("Arial", 16, FontStyle.Bold) });
-
-            Button dothingsbutton = new System.Windows.Forms.Button
-            {
-                Text = "Start server?",
-                Dock = System.Windows.Forms.DockStyle.Bottom,
-                Height = 40,
-                DialogResult = System.Windows.Forms.DialogResult.OK,
-            };
-
-            dothingsbutton.Click += (sender, e) =>
-            {
-                try
-                {
-                    if (_server == null)
-                    {
-                        _server = new CommandServer(this);
-                        MessageBox.Show("Pipe server started!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Server already running.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        ReadMemory();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to start pipe server:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            };
-
-            Controls.Add(dothingsbutton);
             ResumeLayout(performLayout: false);
             PerformLayout();
         }
 
         internal string GetRomName() {
-            return EmulatorApi.GetGameInfo()?.Name;
+            var game = EmulatorApi?.GetGameInfo();
+            return game?.Name ?? "No ROM Loaded";
         }
 
-        internal uint[] ReadMemory(long startAddress = 0x00000000, long size = 1000, string domain = "WRAM")
-        {
-            uint[] buffer = new uint[size];
-            for (long i = startAddress; i < startAddress + size; i++)
-                buffer[i - startAddress] = MemoryApi.ReadByte(i, domain);
+    internal uint[] ReadMemory(long startAddress = 0x00000000, long size = 1000, string domain = "WRAM")
+    {
+        if (MemoryApi == null || !GetAvailableDomains().Contains(domain))
+            return Array.Empty<uint>();
 
-            return buffer;
-        }
+        uint[] buffer = new uint[size];
+        for (long i = startAddress; i < startAddress + size; i++)
+            buffer[i - startAddress] = MemoryApi.ReadByte(i, domain);
+
+        return buffer;
+    }
 
         internal IReadOnlyCollection<string> GetAvailableDomains()
         {
