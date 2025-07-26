@@ -1,9 +1,12 @@
 import tkinter;
 import time;
 
+from PIL import Image, ImageTk
+
 from core.plugins.plugin import Plugin
 from core.cheats.memory_peeker import watch_memory_address
 from core.cheats.memory_domains import Domains
+from utils import resource_path
 
 import logging
 
@@ -50,16 +53,6 @@ class DeathCounter(Plugin):
         # Check for support
         self.check_for_support();
 
-        # Should retry connection to the cheat server
-        self.should_reconnect = tkinter.BooleanVar();
-        
-        should_reconnect = self.get_persisted_data("should_reconnect");
-        if should_reconnect is None:
-            should_reconnect = False;
-            self.persist_data("should_reconnect", should_reconnect);
-
-        self.should_reconnect.set(should_reconnect);
-
     def cleanup(self):
         if self.last_hack is not None:
             self.persist_death_counter();
@@ -74,9 +67,6 @@ class DeathCounter(Plugin):
 
         if not self.test_cheats():
             self.death_counter_label.config(text="Failed to connect to the cheat server.");
-            if self.should_reconnect.get():
-                logger.warning("Failed to connect to the cheat server. Will retry in 5 seconds.");
-                self.ui.root.after(self.cheat_server_reconnect_interval * 1000, lambda: self.on_hack_start(hack));
             return;
 
         data = self.get_persisted_data(self.get_save_name());
@@ -102,18 +92,30 @@ class DeathCounter(Plugin):
         self.last_hack = None;
 
     def define_menu_options(self, my_menu):
-        my_menu.add_checkbutton(label="Reconnect to Cheat Server", variable=self.should_reconnect, command=lambda: self.persist_data("should_reconnect", self.should_reconnect.get()));
+        pass;
 
     def pack_ui(self, frame: tkinter.Frame):
 
+        self.content_frame = tkinter.Frame(frame);
+
         text: str = "Open a hack to start counting deaths." if self.is_supported else "This plugin is not supported by the current emulator.";
-        
-        self.death_counter_label = tkinter.Label(frame, text=text);
-        self.death_counter_label.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER);
+
+        pil_image = Image.open(resource_path("plugins\\DeathCounter\\res\\death.png"));
+        pil_image = pil_image.resize((21, 32));
+        self.skull_image = ImageTk.PhotoImage(pil_image);
+
+        self.skull_image_label = tkinter.Label(self.content_frame, image=self.skull_image);
+        self.death_counter_label = tkinter.Label(self.content_frame, text=text);
+        self.death_counter_label.config(font=("Arial", 18));
+
+        self.skull_image_label.pack(side=tkinter.LEFT);
+        self.death_counter_label.pack(side=tkinter.RIGHT, padx=5, pady=5);
+
+        self.content_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER);
 
     def update_death_counter(self):
 
-        death_text : str = f"Deaths: {self.deathCounter.get()}"
+        death_text : str = f"{self.deathCounter.get()}"
         self.death_counter_label.config(text=death_text);
 
     def watch_player_animation_trigger_state_address(self, new_value: int):

@@ -20,7 +20,7 @@
                 "time": 0.3773978
             },
             "Invictus": {
-                "time": 21090.55611228943
+                "time": 24419.072282791138
             },
             "Super Dram World": {
                 "time": 0
@@ -33,7 +33,7 @@
         "Death counter": {
             "should_reconnect": false,
             "Invictus": {
-                "deaths": 78
+                "deaths": 318
             }
         }
     }
